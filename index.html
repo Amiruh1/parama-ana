@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Balotario UPN - Fundamentos de Seguridad y Ethical Hacking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f4f8;
+            color: #1e2a3e;
+            line-height: 1.5;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Contenedor principal */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* Encabezado principal */
+        .hero {
+            background: linear-gradient(135deg, #0b2b3b, #123e4e);
+            color: white;
+            padding: 2rem 2rem;
+            border-radius: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 12px 25px -10px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero small {
+            display: block;
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        /* Módulos estilo cards */
+        .modulo {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            margin-bottom: 2.5rem;
+            overflow: hidden;
+            transition: transform 0.1s ease;
+        }
+
+        .modulo-header {
+            background: #1e4a6b;
+            padding: 1.2rem 2rem;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .modulo-header:hover {
+            background: #0f3b54;
+        }
+
+        .modulo-header h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modulo-header .badge {
+            background: #ffb347;
+            color: #1e2a3e;
+            padding: 0.2rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .toggle-icon {
+            font-size: 1.8rem;
+            font-weight: 300;
+            transition: transform 0.2s;
+        }
+
+        .modulo-content {
+            padding: 1.5rem 2rem 2rem;
+            display: block;
+            border-top: 1px solid #e9edf2;
+        }
+
+        /* Tarjetas de preguntas */
+        .preguntas-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card-pregunta {
+            background: #f9fafc;
+            border-radius: 1rem;
+            border-left: 5px solid #2c7da0;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .pregunta {
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0a2f44;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 1rem;
+            transition: background 0.2s;
+        }
+
+        .pregunta:hover {
+            background: #eef2f7;
+        }
+
+        .pregunta-text {
+            flex: 1;
+            padding-right: 1rem;
+        }
+
+        .respuesta {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            background: #fef9e6;
+            border-radius: 0 0 1rem 1rem;
+            margin-top: 0;
+            border-top: none;
+        }
+
+        .respuesta.show {
+            max-height: 280px;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #ffe3b5;
+        }
+
+        .respuesta p {
+            color: #2d4a22;
+            font-weight: 500;
+            margin: 0;
+            line-height: 1.45;
+        }
+
+        .respuesta p::before {
+            content: "✓ ";
+            font-weight: bold;
+            color: #e67e22;
+        }
+
+        .btn-respuesta {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #2c7da0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .btn-respuesta:hover {
+            background: #e0e7ed;
+        }
+
+        /* footer */
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: #dce5ec;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            color: #2c3e4e;
+        }
+
+        /* expansión general */
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 0.5rem 1.2rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            font-weight: 500;
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 1rem;
+            }
+            .modulo-header h2 {
+                font-size: 1.2rem;
+            }
+            .pregunta {
+                font-size: 0.9rem;
+                padding: 0.8rem 1rem;
+            }
+            .respuesta.show {
+                padding: 0.8rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>📚 Balotario UPN · Seguridad Informática</h1>
+        <p>Fundamentos de Seguridad · Ethical Hacking · Reconocimiento, Scanning y Enumeración</p>
+        <small>Basado en los contenidos de los módulos SEM2, SEM3, SEM4 y SEM5</small>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">📘 Módulo 1: 20 preguntas</div>
+        <div class="stat-card">🕵️ Módulo 2: 20 preguntas</div>
+        <div class="stat-card">🔍 Módulo 3: 20 preguntas</div>
+        <div class="stat-card">🛠️ Módulo 4: 20 preguntas</div>
+        <div class="stat-card">✅ Total: 80 preguntas</div>
+    </div>
+
+    <!-- MÓDULO 1: FUNDAMENTOS DE SEGURIDAD (SEM2) -->
+    <div class="modulo" id="modulo1">
+        <div class="modulo-header" onclick="toggleModulo(this)">
+            <h2><span>📌</span> Módulo 1: Fundamentos de Seguridad (SEM2) <span class="badge">Gestión de riesgos · SGSI · PMI</span></h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="modulo-content">
+            <div class="preguntas-grid" id="mod1-preguntas"></div>
+        </div>
+    </div>
+
+    <!-- MÓDULO 2: ETHICAL HACKING Y METODOLOGÍAS (SEM3) -->
+    <div class="modulo" id="modulo2">
+        <div class="modulo-header" onclick="toggleModulo(this)">
+            <h2><span>⚔️</span> Módulo 2: Ethical Hacking y Metodologías (SEM3) <span class="badge">OSSTMM · PTES · Kali Linux</span></h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="modulo-content">
+            <div class="preguntas-grid" id="mod2-preguntas"></div>
+        </div>
+    </div>
+
+    <!-- MÓDULO 3: RECONOCIMIENTO, SCANNING Y ENUMERACIÓN (SEM4) -->
+    <div class="modulo" id="modulo3">
+        <div class="modulo-header" onclick="toggleModulo(this)">
+            <h2><span>🕸️</span> Módulo 3: Reconocimiento, Scanning y Enumeración (SEM4) <span class="badge">OSINT · Fingerprinting · IA</span></h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="modulo-content">
+            <div class="preguntas-grid" id="mod3-preguntas"></div>
+        </div>
+    </div>
+
+    <!-- MÓDULO 4: SCANNING, ENUMERACIÓN Y HERRAMIENTAS (SEM5) -->
+    <div class="modulo" id="modulo4">
+        <div class="modulo-header" onclick="toggleModulo(this)">
+            <h2><span>🔧</span> Módulo 4: Scanning, Enumeración y Herramientas (SEM5) <span class="badge">Nmap · Netcat · Enum4linux</span></h2>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="modulo-content">
+            <div class="preguntas-grid" id="mod4-preguntas"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        🌐 Material de estudio basado en diapositivas UPN · Mg. Martin Aquije<br>
+        Preguntas y respuestas oficiales para repaso académico.
+    </div>
+</div>
+
+<script>
+    // ==================== MÓDULO 1: PREGUNTAS Y RESPUESTAS ====================
+    const modulo1QA = [
+        { q: "¿Qué es la Gestión de Riesgos Informáticos?", a: "Es el proceso sistemático de identificar, evaluar, tratar y monitorear los riesgos relacionados con TI para proteger la confidencialidad, integridad y disponibilidad de la información." },
+        { q: "Menciona 3 ejemplos de activos en un SGSI.", a: "Servidores, base de datos de clientes, reputación corporativa." },
+        { q: "Define amenaza, vulnerabilidad e impacto.", a: "Amenaza = evento que puede dañar un activo; Vulnerabilidad = debilidad que permite que la amenaza afecte al activo; Impacto = consecuencia si el riesgo se materializa." },
+        { q: "¿En qué metodología se basa el ciclo del SGSI?", a: "PHVA (Planificar – Hacer – Verificar – Actuar) o PDCA." },
+        { q: "¿Qué se hace en la fase 'Plan' del SGSI?", a: "Definir alcance, política de seguridad, identificar activos y amenazas, y realizar gestión de riesgos." },
+        { q: "¿Qué resultado se obtiene en la fase 'Verificar' del SGSI?", a: "Identificar si el SGSI cumple objetivos o requiere ajustes mediante auditorías y métricas." },
+        { q: "Menciona 3 tipos de activos en un SGSI.", a: "Información, activos tecnológicos, personas." },
+        { q: "¿Qué debe contener una política de seguridad de la información?", a: "Introducción, alcance, objetivos, principios (CIA), roles, directrices generales, cumplimiento y revisión." },
+        { q: "¿Cuál es el objetivo del análisis de riesgos?", a: "Evaluar probabilidad e impacto de amenazas sobre activos críticos para proponer tratamientos." },
+        { q: "¿Qué es un activo crítico?", a: "Aquel cuyo daño afectaría gravemente la operación o reputación de la organización." },
+        { q: "¿Qué control se propone para un ataque ransomware contra una BD?", a: "Backups diarios, actualización de parches y monitoreo 24/7." },
+        { q: "¿Qué fase del PMI incluye la instalación de firewalls y VPNs?", a: "Ejecución." },
+        { q: "¿Qué documento se elabora en la fase de Inicio del PMI?", a: "Acta de constitución del proyecto." },
+        { q: "¿Qué significa CIA en seguridad?", a: "Confidencialidad, Integridad y Disponibilidad." },
+        { q: "¿Qué tipo de activo es un 'servidor de correo'?", a: "Activo tecnológico (hardware)." },
+        { q: "¿Qué amenaza aplica a la infraestructura física de un datacenter?", a: "Incendio, corte eléctrico, inundación." },
+        { q: "¿Qué vulnerabilidad puede permitir una fuga de datos por error humano?", a: "Envío de correo a destinatario equivocado sin políticas DLP." },
+        { q: "¿Qué se debe hacer en la fase 'Actuar' del SGSI?", a: "Tomar acciones correctivas y mejorar continuamente." },
+        { q: "¿Qué rol es responsable de la protección de activos en una política de seguridad?", a: "Propietarios de activos." },
+        { q: "¿Qué normativa internacional estándar se usa para implementar un SGSI?", a: "ISO/IEC 27001." }
+    ];
+
+    // MÓDULO 2: ETHICAL HACKING
+    const modulo2QA = [
+        { q: "¿Qué es el Ethical Hacking?", a: "Práctica autorizada de usar técnicas de hackers para detectar y corregir vulnerabilidades." },
+        { q: "Diferencia entre White Hat y Black Hat.", a: "White Hat actúa con permiso y defensivamente; Black Hat actúa maliciosamente sin autorización." },
+        { q: "Menciona 2 principios del hacking ético.", a: "Permiso y legalidad." },
+        { q: "¿Cuál es el objetivo de la fase de Reconocimiento?", a: "Recopilar la mayor cantidad de información posible sobre el objetivo." },
+        { q: "¿Qué herramientas se usan en la fase de Escaneo y Enumeración?", a: "Nmap, Nessus, OpenVAS." },
+        { q: "¿Qué se hace en la fase de Obtención de Acceso?", a: "Explotar vulnerabilidades para entrar al sistema." },
+        { q: "¿Para qué sirve la fase de Mantenimiento del Acceso en hacking ético?", a: "Comprobar si un atacante podría mantener control del sistema, sin dejar puertas abiertas." },
+        { q: "¿Qué simula un hacker ético en la fase de Cobertura de Huellas?", a: "Ocultar rastros como borrar logs, sin dañar información crítica." },
+        { q: "¿Qué debe contener el Reporte final de un ethical hacker?", a: "Vulnerabilidades, nivel de riesgo, evidencias y recomendaciones." },
+        { q: "¿Qué significa OSSTMM?", a: "Open Source Security Testing Methodology Manual." },
+        { q: "¿Qué mide el RAV en OSSTMM?", a: "Riesgos en función de exposición, control y confianza." },
+        { q: "¿Qué enfoque tiene PTES?", a: "Técnico y práctico para pentesting ofensivo." },
+        { q: "Diferencia clave entre OSSTMM y PTES.", a: "OSSTMM es integral y cuantitativo; PTES es más práctico y técnico." },
+        { q: "¿Qué distribución de Linux se usa para pentesting?", a: "Kali Linux." },
+        { q: "¿Qué herramienta de Kali Linux sirve para análisis de tráfico?", a: "Wireshark." },
+        { q: "¿Para qué sirve Aircrack-ng?", a: "Auditoría de redes Wi-Fi y descifrado de contraseñas WEP/WPA." },
+        { q: "¿Qué función tiene Burp Suite?", a: "Pruebas de seguridad en aplicaciones web (intercepta y modifica tráfico HTTP/HTTPS)." },
+        { q: "¿Qué hace Metasploit Framework?", a: "Ejecuta exploits de vulnerabilidades de forma controlada." },
+        { q: "¿Qué característica tiene Nmap?", a: "Escaneo de puertos, detección de SO y scripting NSE." },
+        { q: "¿Qué fase del ethical hacking NO se ejecuta realmente de forma destructiva?", a: "Cobertura de huellas (solo se simula)." }
+    ];
+
+    // MÓDULO 3: RECONOCIMIENTO SEM4
+    const modulo3QA = [
+        { q: "¿Qué es fingerprinting en seguridad?", a: "Identificar y recolectar información detallada de un sistema para determinar sus características." },
+        { q: "¿Qué tipo de fingerprinting determina el sistema operativo?", a: "OS Fingerprinting." },
+        { q: "Diferencia entre reconocimiento pasivo y activo.", a: "Pasivo no interactúa directamente (ej: Google Hacking); Activo sí interactúa (ej: Nmap)." },
+        { q: "¿Qué herramienta se usa para OS Fingerprinting?", a: "Nmap con parámetro -O." },
+        { q: "¿Qué es OSINT?", a: "Open Source Intelligence: obtención de información pública para reconocer un objetivo." },
+        { q: "¿Qué información revela el comando whois?", a: "Propietario del dominio, fechas, DNS asociados, contactos." },
+        { q: "¿Qué tipo de registro DNS señala servidores de correo?", a: "MX." },
+        { q: "¿Qué operador de Google permite buscar solo en un dominio específico?", a: "site:ejemplo.com" },
+        { q: "¿Qué busca el dork `intitle:'index of'` ?", a: "Listados de directorios expuestos." },
+        { q: "¿Cómo puede ayudar la IA en el reconocimiento?", a: "Procesar OSINT, generar reportes automáticos y crear Google Dorks." },
+        { q: "¿Qué librería de machine learning sirve para clasificar tráfico de red?", a: "Scikit-learn." },
+        { q: "¿Qué beneficio aporta TensorFlow en reconocimiento?", a: "Detección de anomalías y patrones complejos en grandes volúmenes de datos." },
+        { q: "¿Qué limitación tiene la IA en reconocimiento?", a: "Depende de datos de entrenamiento; puede fallar si son incompletos." },
+        { q: "¿Qué herramienta OSINT permite buscar servicios expuestos en IoT?", a: "Shodan." },
+        { q: "¿Qué técnica de reconocimiento usa redes sociales?", a: "OSINT (pasivo)." },
+        { q: "¿Qué es Google Hacking?", a: "Uso avanzado de operadores para encontrar información sensible." },
+        { q: "¿Qué hace Maltego + ML?", a: "Mapear relaciones entre dominios, correos y redes sociales." },
+        { q: "¿Qué comando de whois aplica al dominio upn.edu.pe?", a: "whois www.upn.edu.pe" },
+        { q: "¿Qué tipo de reconocimiento incluye fuzzing con Gobuster?", a: "Reconocimiento activo." },
+        { q: "¿Qué relación hay entre fingerprinting y reconocimiento?", a: "El reconocimiento es el proceso general; fingerprinting es una subtécnica dentro del activo." }
+    ];
+
+    // MÓDULO 4: SCANNING Y HERRAMIENTAS (SEM5)
+    const modulo4QA = [
+        { q: "¿Qué es el scanning en ciberseguridad?", a: "Analizar un sistema para descubrir puertos, servicios, SO y vulnerabilidades." },
+        { q: "¿Qué protocolo garantiza comunicación confiable?", a: "TCP." },
+        { q: "¿Qué bandera TCP se usa para sincronizar números de secuencia?", a: "SYN." },
+        { q: "¿En qué consiste un TCP Connect Scan?", a: "Establece handshake completo (SYN, SYN/ACK, ACK) para ver si el puerto está abierto." },
+        { q: "Ventaja del SYN Scan frente al TCP Connect.", a: "Es más sigiloso y menos registrado en logs." },
+        { q: "¿Qué desventaja tiene el UDP Scan?", a: "Más lento y sin respuestas claras; no distingue fácilmente abierto vs filtrado." },
+        { q: "¿Qué significa un puerto 'filtered' según Nmap?", a: "Un firewall bloquea la conexión sin respuesta clara." },
+        { q: "¿Qué se hace en la enumeración de usuarios?", a: "Descubrir cuentas válidas para ataques de fuerza bruta o phishing." },
+        { q: "¿Qué responde la enumeración de servicios?", a: "Qué servicio/versión corre en un puerto abierto." },
+        { q: "¿Qué herramienta muestra versiones de servicios con Nmap?", a: "nmap -sV" },
+        { q: "¿Qué comando de Nmap escanea puertos 22,80,443?", a: "nmap -p 22,80,443" },
+        { q: "¿Qué hace Netcat en modo servidor?", a: "Escucha en un puerto esperando conexiones (nc -lvp puerto)." },
+        { q: "¿Cómo se transfiere un archivo con Netcat?", a: "Servidor: nc -lvp puerto > archivo; Cliente: nc ip puerto < archivo" },
+        { q: "¿Para qué sirve Enum4linux?", a: "Enumerar sistemas Windows vía SMB (usuarios, shares, políticas)." },
+        { q: "¿Qué comando de Enum4linux lista usuarios?", a: "enum4linux -U IP" },
+        { q: "¿Qué tipo de escaneo usa Nmap con privilegios de root?", a: "SYN Scan (half-open)." },
+        { q: "¿Qué significa 'half-open' en scanning?", a: "No se completa la conexión TCP; se envía RST tras recibir SYN/ACK." },
+        { q: "¿Qué respuesta ICMP indica puerto UDP cerrado?", a: "ICMP Type 3 Code 3 (Port Unreachable)." },
+        { q: "¿Qué herramienta permite crear una shell remota?", a: "Netcat." },
+        { q: "¿Qué comando de Nmap detecta SO y servicios juntos?", a: "nmap -A" }
+    ];
+
+    // función para renderizar preguntas dentro de un contenedor
+    function renderizarPreguntas(containerId, qaArray) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
+        qaArray.forEach((item, idx) => {
+            const card = document.createElement('div');
+            card.className = 'card-pregunta';
+
+            const preguntaDiv = document.createElement('div');
+            preguntaDiv.className = 'pregunta';
+            preguntaDiv.setAttribute('data-idx', idx);
+            
+            const textSpan = document.createElement('span');
+            textSpan.className = 'pregunta-text';
+            textSpan.innerText = `${idx+1}. ${item.q}`;
+            
+            const btn = document.createElement('button');
+            btn.className = 'btn-respuesta';
+            btn.innerHTML = '▼';
+            btn.setAttribute('aria-label', 'Ver respuesta');
+            
+            preguntaDiv.appendChild(textSpan);
+            preguntaDiv.appendChild(btn);
+            
+            const respuestaDiv = document.createElement('div');
+            respuestaDiv.className = 'respuesta';
+            const p = document.createElement('p');
+            p.innerText = item.a;
+            respuestaDiv.appendChild(p);
+            
+            // toggle respuesta al hacer click en el botón o en toda la pregunta
+            const toggleRespuesta = (e) => {
+                e.stopPropagation();
+                const isVisible = respuestaDiv.classList.contains('show');
+                if (isVisible) {
+                    respuestaDiv.classList.remove('show');
+                    btn.innerHTML = '▼';
+                } else {
+                    respuestaDiv.classList.add('show');
+                    btn.innerHTML = '▲';
+                }
+            };
+            
+            btn.addEventListener('click', toggleRespuesta);
+            preguntaDiv.addEventListener('click', (e) => {
+                if (e.target !== btn && !btn.contains(e.target)) {
+                    // simular click en botón
+                    const isVisible = respuestaDiv.classList.contains('show');
+                    if (isVisible) {
+                        respuestaDiv.classList.remove('show');
+                        btn.innerHTML = '▼';
+                    } else {
+                        respuestaDiv.classList.add('show');
+                        btn.innerHTML = '▲';
+                    }
+                }
+            });
+            
+            card.appendChild(preguntaDiv);
+            card.appendChild(respuestaDiv);
+            container.appendChild(card);
+        });
+    }
+
+    // función plegar/desplegar módulo completo
+    function toggleModulo(headerElement) {
+        const moduloDiv = headerElement.closest('.modulo');
+        const content = moduloDiv.querySelector('.modulo-content');
+        const icon = headerElement.querySelector('.toggle-icon');
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            icon.innerHTML = '▼';
+        } else {
+            content.style.display = 'none';
+            icon.innerHTML = '▶';
+        }
+    }
+
+    // inicializar todos los módulos y mantenerlos visibles por defecto
+    window.onload = () => {
+        renderizarPreguntas('mod1-preguntas', modulo1QA);
+        renderizarPreguntas('mod2-preguntas', modulo2QA);
+        renderizarPreguntas('mod3-preguntas', modulo3QA);
+        renderizarPreguntas('mod4-preguntas', modulo4QA);
+        
+        // Asegurar que todos los módulos tengan contenido visible inicialmente
+        const modulos = document.querySelectorAll('.modulo');
+        modulos.forEach(mod => {
+            const content = mod.querySelector('.modulo-content');
+            if (content) content.style.display = 'block';
+            const icon = mod.querySelector('.toggle-icon');
+            if (icon) icon.innerHTML = '▼';
+        });
+    };
+</script>
+</body>
+</html>
